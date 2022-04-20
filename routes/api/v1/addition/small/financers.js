@@ -28,9 +28,8 @@ router.post(
     var rests = strs.replace(/  | |   |    |      /gi, function (x) {
       return  "";
     });
-    financersValues.link = rests.toLowerCase()
+    financersValues.financerLink = rests.toLowerCase()
 // link end
-
     //Do database stuff
 if(
   req.body.financerName == undefined || req.body.financerName == "" 
@@ -209,5 +208,32 @@ router.get(
   }
 );
 
+// @type    POST DELETE
+//@route    /api/v1/addition/small/financers/delete/:id
+// @desc    route for personnal user question
+// @access  PRIVATE
+
+router.delete(
+  "/delete/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const id = req.params.id;
+    Financers.findOne({ _id: id }).then(FinancersResult => {
+      if (FinancersResult) {
+        Financers.findOneAndDelete({ _id: id })
+          .then(() =>
+            res.json({ message: "Deleted successfully", variant: "success" })
+          )
+          .catch(err =>
+            res.json("Failed to delete due to this error - " + err)
+          );
+      } else {
+        res
+          .status(400)
+          .json({ message: "Financer Not Found", variant: "error" });
+      }
+    });
+  }
+);
 
 module.exports = router;

@@ -17,7 +17,6 @@ import {
 	TablePagination,
 	Divider,
 } from "@mui/material";
-import ImagePreviewDelete from "./../../../Components/Common/ImagePreviewDelete";
 
 import axios from "axios";
 import { MdSearch, MdDoneAll, MdClearAll, MdPanorama, MdLock, MdPublic, MdDeleteForever } from "react-icons/md";
@@ -33,6 +32,7 @@ export default function AddFinancers() {
 	const classes = useStyles();
 	const [id, setId] = useState("");
     const [financerName, setFinancerName] = useState("");
+    const [financerLink, setFinancerLink] = useState("");
 
 
 	const [allData, setAllData] = useState([]);
@@ -53,7 +53,7 @@ export default function AddFinancers() {
 	const getData = async (word) => {
 	
 		await axios
-			.get(`/api/v1/addition/AddFinancers/allAddFinancers/${word}`)
+			.get(`/api/v1/addition/small/financers/allfinancers/${word}`)
 			.then((res) => (setAllData(res.data)))
 			.catch((err) => console.log(err));
 	};
@@ -61,9 +61,9 @@ export default function AddFinancers() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		handleOpen();
-		let newCat = { _id: id,  };
+		let allValue = { _id: id,financerName  };
 		await axios
-			.post(`/api/v1/addition/AddFinancers/${id}`, newCat)
+			.post(`/api/v1/addition/small/financers/${id}`, allValue)
 			.then((res) => {
 				snackRef.current.handleSnack(res.data);
 				getData("");
@@ -77,24 +77,27 @@ export default function AddFinancers() {
 	};
 	const handleClear = () => {
 		setId("");
-		
+		setFinancerName("")
+		setFinancerLink("")
 	};
-	const setData = async (id) => {
+	const setData = (data) => {
+		setId(data._id)
+		setFinancerName(data.financerName)
+		setFinancerLink(data.financerLink)
+	};
+	const getOneData = async (id) => {
 		handleOpen();
 		await axios
-			.get(`/api/v1/addition/AddFinancers/get/${id}`)
+			.get(`/api/v1/addition/small/financers/get/${id}`)
 			.then((res) => {
-				setId(res.data._id);
-
-				
+				setData(res.data);				
 			})
 			.catch((err) => console.log(err));
 			handleClose();
 	};
-
 	const handleDelete = (id) => {
 		axios
-			.delete(`/api/v1/addition/AddFinancers/delete/${id}`)
+			.delete(`/api/v1/addition/small/financers/delete/${id}`)
 			.then((res) => alert(res.data.message))
 			.then(() => getData(""))
 			.catch((err) => console.log(err));
@@ -157,12 +160,12 @@ export default function AddFinancers() {
 									required
 									fullWidth
 									inputProps={{ maxLength: "42" }}
-									onBlur={() => handleErr("financerName")}
-									error={err.errIn === "financerName" ? true : false}
-									label={err.errIn === "financerName" ? err.msg : "Financer Name"}
-									placeholder="Name of the Financer.."
-									value={financerName}
-									onChange={(e) => setFinancerName(e.target.value)}
+									onBlur={() => handleErr("financerLink")}
+									error={err.errIn === "financerLink" ? true : false}
+									label={err.errIn === "financerLink" ? err.msg : "financer Link"}
+									placeholder="Name of the financerLink.."
+									value={financerLink}
+									onChange={(e) => setFinancerLink(e.target.value)}
 								/>
 							</Grid>)}
 							
@@ -225,9 +228,9 @@ export default function AddFinancers() {
 							</TableHead>
 							<TableBody>
 								{allData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => (
-									<TableRow key={data._id} onClick={() => setData(data._id)} hover>
+									<TableRow key={data._id} onClick={() => getOneData(data._id)} hover>
 										<TableCell component="td" scope="row">
-											Name : {data.AddFinancersName} ; Description : {data.description} <br />
+										Financer Name : {data.financerName} ; Created At : {data.createdAt} <br />
 										</TableCell>
 									</TableRow>
 								))}

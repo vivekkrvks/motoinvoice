@@ -22,9 +22,9 @@ const cookieSession = require('cookie-session')
 const registration = require("./routes/api/v1/auth/registration");
 const login = require("./routes/api/v1/auth/login");
 // Addition
-const financers = require("./routes/api/v1/profile/addCompanyProfile");
+const addCompanyProfile = require("./routes/api/v1/profile/addCompanyProfile");
 // Profile
-const addCompanyProfile = require("./routes/api/v1/addition/small/financers");
+const financers = require("./routes/api/v1/addition/small/financers");
 // other
 const fileUpload = require("./routes/api/v1/other/fileUpload");
 

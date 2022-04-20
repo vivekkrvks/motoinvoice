@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const FinancesSchema = new Schema({
+const FinancersSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "myUser"
@@ -16,10 +16,6 @@ cGstNo:{
   },
 // Basic Details
 financerName:{
-    type:String,
-    default:""
-    },
-financerCode:{
     type:String,
     default:""
     },
@@ -38,7 +34,7 @@ createdAt: {
   },
 });
 
-module.exports = Finances = mongoose.model("myFinances", FinancesSchema);
+module.exports = Financers = mongoose.model("myFinancers", FinancersSchema);
 
 
 
