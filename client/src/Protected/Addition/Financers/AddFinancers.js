@@ -35,7 +35,7 @@ export default function AddFinancers() {
     const [financerName, setFinancerName] = useState("");
 
 
-	const [allCat, setAllCat] = useState([]);
+	const [allData, setAllData] = useState([]);
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const [err] = useState({ errIn: "", msg: "" });
@@ -54,7 +54,7 @@ export default function AddFinancers() {
 	
 		await axios
 			.get(`/api/v1/addition/AddFinancers/allAddFinancers/${word}`)
-			.then((res) => (setAllCat(res.data)))
+			.then((res) => (setAllData(res.data)))
 			.catch((err) => console.log(err));
 	};
 
@@ -146,11 +146,25 @@ export default function AddFinancers() {
 									onBlur={() => handleErr("financerName")}
 									error={err.errIn === "financerName" ? true : false}
 									label={err.errIn === "financerName" ? err.msg : "Financer Name"}
-									placeholder="Name of the Financer Name.."
+									placeholder="Name of the Financer.."
 									value={financerName}
 									onChange={(e) => setFinancerName(e.target.value)}
 								/>
 							</Grid>
+				{ id &&		(	<Grid item xs={6}>
+								<TextField
+									variant="outlined"
+									required
+									fullWidth
+									inputProps={{ maxLength: "42" }}
+									onBlur={() => handleErr("financerName")}
+									error={err.errIn === "financerName" ? true : false}
+									label={err.errIn === "financerName" ? err.msg : "Financer Name"}
+									placeholder="Name of the Financer.."
+									value={financerName}
+									onChange={(e) => setFinancerName(e.target.value)}
+								/>
+							</Grid>)}
 							
                             
 							<Grid item xs={12}>
@@ -210,7 +224,7 @@ export default function AddFinancers() {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{allCat.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => (
+								{allData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => (
 									<TableRow key={data._id} onClick={() => setData(data._id)} hover>
 										<TableCell component="td" scope="row">
 											Name : {data.AddFinancersName} ; Description : {data.description} <br />
@@ -221,7 +235,7 @@ export default function AddFinancers() {
 							<TableFooter>
 								<TableRow>
 									<TablePagination
-										count={allCat.length}
+										count={allData.length}
 										rowsPerPage={rowsPerPage}
 										page={page}
 										onChangePage={(e, page) => setPage(page)}

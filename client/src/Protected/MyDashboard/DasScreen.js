@@ -48,6 +48,10 @@ export default function DasScreen() {
 }
 
 const data = [{title:'Dashboard',link:"/dashboard",ele:8},
+{title:'Add Company Profile',link:"/AddCompanyProfile",ele:8},
+{title:'Add Invoice',link:"/AddInvoice",ele:8},
+{title:'Add Bike Models',link:"/AddBikeModels",ele:8},
+{title:'Add Financers',link:"/AddFinancers",ele:8},
 {title:'Check Page',link:"/check",ele:8},
 {title:'Add Employee',link:"/AddEmployee",ele:8},
 {title:'First Page',link:"/firstpage",ele:8},

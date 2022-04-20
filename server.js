@@ -21,8 +21,10 @@ const cookieSession = require('cookie-session')
 // Authenitcation
 const registration = require("./routes/api/v1/auth/registration");
 const login = require("./routes/api/v1/auth/login");
+// Addition
+const financers = require("./routes/api/v1/profile/addCompanyProfile");
 // Profile
-const addCompanyProfile = require("./routes/api/v1/profile/addCompanyProfile");
+const addCompanyProfile = require("./routes/api/v1/addition/small/financers");
 // other
 const fileUpload = require("./routes/api/v1/other/fileUpload");
 
@@ -75,6 +77,8 @@ app.use("/api/v1/auth/registration", registration);
 app.use("/api/v1/auth/login", login);
 // Profile 
 app.use("/api/v1/profile/addCompanyProfile", addCompanyProfile);
+// Addition
+app.use("/api/v1/addition/small/financers", financers);
 // other
 app.use("/api/v1/other/fileUpload", fileUpload);
 
