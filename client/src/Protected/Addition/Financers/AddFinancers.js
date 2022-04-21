@@ -19,13 +19,14 @@ import {
 } from "@mui/material";
 
 import axios from "axios";
-import { MdSearch, MdDoneAll, MdClearAll, MdPanorama, MdLock, MdPublic, MdDeleteForever } from "react-icons/md";
+import { MdDoneAll, MdClearAll, MdDeleteForever } from "react-icons/md";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CommonDash from "./../../MyDashboard/CommonDash"
 import  {Search, StyledInputBase,SearchIconWrapper} from "./../../../Components/Common/SearchBar";
 import SearchIcon from '@mui/icons-material/Search';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+
 const theme = createTheme();
 
 export default function AddFinancers() {
@@ -38,7 +39,7 @@ export default function AddFinancers() {
 	const [allData, setAllData] = useState([]);
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
-	const [err] = useState({ errIn: "", msg: "" });
+	const [err,setErr] = useState({ errIn: "", msg: "" });
 	const snackRef = useRef();
 	const [open, setOpen] = useState(false);
 	const handleClose = () => {
@@ -53,7 +54,7 @@ export default function AddFinancers() {
 	const getData = async (word) => {
 	
 		await axios
-			.get(`/api/v1/addition/small/financers/allfinancers/${word}`)
+			.get(`/api/v1/addition/small/financers/allfinancers/${word}`,config)
 			.then((res) => (setAllData(res.data)))
 			.catch((err) => console.log(err));
 	};
@@ -98,22 +99,53 @@ export default function AddFinancers() {
 	const handleDelete = (id) => {
 		axios
 			.delete(`/api/v1/addition/small/financers/delete/${id}`)
-			.then((res) => alert(res.data.message))
+			.then((res) =>(snackRef.current.handleSnack(res.data)))
 			.then(() => getData(""))
 			.catch((err) => console.log(err));
 		handleClear();
 	};
 	const handleErr = (errIn) => {
+		console.log(errIn)
 		switch (errIn) {
-			case "AddFinancersName":
-				// if(title.length  < 10){
-				//     setErr({errIn:"mobileNo", msg:"Enter 10 Digits Mobile No."})
-				// }else setErr({errIn:"", msg:""})
+			case "financerName":
+				if(financerName.length  < 2){
+				    setErr({errIn:"financerName", msg:"Enter at Least 2 Digits Financer Name."})
+				}else setErr({errIn:"", msg:""})
 				break;
 			default:
 				break;
 		}
 	};
+	const handleChange=(value,name,type)=>{
+		if(type==="textOnly"){
+		   var re = /^[A-Za-z_ ]*$/;
+		   if (value === '' || re.test(value)) {
+			  switch (name) {
+				 case "financerName":
+					setFinancerName(value)
+				
+					break;
+				
+				 default:
+					break;
+			  }
+		   }
+  
+		}else if(type==="numberOnly"){
+		   const re = /^[0-9\b]+$/;
+		   if (value === '' || re.test(value)) {
+			 switch (name) {
+				case "pincode":
+					// setPincode(value)
+				   break;
+				
+				default:
+				   break;
+			 }
+		   }
+		}
+		handleErr(name)
+	}
 	return (
 		<>
 		<CommonDash compo = {
@@ -148,24 +180,27 @@ export default function AddFinancers() {
 									inputProps={{ maxLength: "42" }}
 									onBlur={() => handleErr("financerName")}
 									error={err.errIn === "financerName" ? true : false}
-									label={err.errIn === "financerName" ? err.msg : "Financer Name"}
+									label="Financer Name"
+									helperText={err.errIn === "financerName" ? err.msg : ""}
 									placeholder="Name of the Financer.."
 									value={financerName}
-									onChange={(e) => setFinancerName(e.target.value)}
+									onChange={(e) => handleChange(e.target.value,"financerName","textOnly")}
 								/>
 							</Grid>
 				{ id &&		(	<Grid item xs={6}>
 								<TextField
 									variant="outlined"
 									required
+									disabled
 									fullWidth
 									inputProps={{ maxLength: "42" }}
 									onBlur={() => handleErr("financerLink")}
 									error={err.errIn === "financerLink" ? true : false}
 									label={err.errIn === "financerLink" ? err.msg : "financer Link"}
+									helperText={err.errIn === "financerName" ? err.msg : ""}
 									placeholder="Name of the financerLink.."
 									value={financerLink}
-									onChange={(e) => setFinancerLink(e.target.value)}
+									// onChange={(e) => setFinancerLink(e.target.value)}
 								/>
 							</Grid>)}
 							
@@ -260,3 +295,12 @@ export default function AddFinancers() {
 	
 	);
 }
+
+const raw = localStorage.getItem("data")
+const payload= JSON.parse(raw)
+const config = {
+	headers:{
+		"Authorization": payload.token,
+		"Content-Type": "application/json",
+	}
+  };

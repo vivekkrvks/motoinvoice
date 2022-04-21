@@ -78,15 +78,15 @@ if(
 // @access  PRIVATE
 router.get(
   "/allfinancers", 
-  (req, res) => {
-    Financers.find({})
-      .sort({ date: -1 })
-      .then(Financers => res.json(Financers))
-      .catch(err =>
-        res
-          .status(404)
-          .json({ message: "No Financers Found", variant: "error" })
-      );
+  passport.authenticate("jwt", { session: false }),
+  async(req, res) => {
+    let Financers1 = await Financers.aggregate([
+      {$match: {cGstNo:req.user.companyGstNo, } }, 
+      {$project: { financerName: 1,createdAt:1 }},
+      {$sort:{date:-1}}
+  
+      ]).exec()  
+      res.json(Financers1)
   }
 );
 
@@ -198,12 +198,18 @@ if(
 router.get(
   "/allfinancers/:searchfinancers",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
+  async(req, res) => {
     const search = req.params.searchfinancers;
     if (isNaN(search)) {
-      Financers.find({
-        financerName: new RegExp(search, "i")
-      }).then(Financers => res.json(Financers)).catch(err => res.json({message: "Problem in Searching" + err, variant: "success"}));
+      let Financers1 = await Financers.aggregate([
+        {$match: {cGstNo:req.user.companyGstNo,
+          financerName: new RegExp(search, "i")
+        } },  
+        {$project: { financerName: 1,createdAt:1 }},
+        {$sort:{date:-1}}
+    
+        ]).exec()  
+        res.json(Financers1)
     } 
   }
 );

@@ -9,6 +9,7 @@ const User = require("../../../../models/User");
 
 //Load companyProfile.js Model
 const CompanyProfile = require("../../../../models/CompanyProfile");
+
 function generateString(length) {
   // function to generate random character
   // declare all allChar

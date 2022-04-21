@@ -23,6 +23,7 @@ const registration = require("./routes/api/v1/auth/registration");
 const login = require("./routes/api/v1/auth/login");
 // Addition
 const addCompanyProfile = require("./routes/api/v1/profile/addCompanyProfile");
+const indiaState = require("./routes/api/v1/addition/dropDownData/indiaState");
 // Profile
 const financers = require("./routes/api/v1/addition/small/financers");
 // other
@@ -78,6 +79,7 @@ app.use("/api/v1/auth/login", login);
 // Profile 
 app.use("/api/v1/profile/addCompanyProfile", addCompanyProfile);
 // Addition
+app.use("/api/v1/addition/dropDownData/indiaState", indiaState);
 app.use("/api/v1/addition/small/financers", financers);
 // other
 app.use("/api/v1/other/fileUpload", fileUpload);
